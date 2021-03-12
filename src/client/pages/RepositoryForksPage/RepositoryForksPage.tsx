@@ -1,24 +1,25 @@
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { Box, Container, Typography } from '@material-ui/core';
 
 import { withQueryParams } from 'client/components';
-import { getRepositoryForksRequest } from 'client/store/features/forks';
 
-type TRepositoryForksPageParams = {
+import { RepositoryForksTable } from './components';
+import { useRepositoryForksPage } from './hooks';
+import { useStyles } from './RepositoryForksPage.styled';
+
+export type TRepositoryForksPageParams = {
   owner: string;
   repository: string;
 };
 
-type TRepositoryForksPageQueryParams = {
-  page?: number;
-  take?: number;
+export type TRepositoryForksPageQueryParams = {
+  page: number;
+  take: number;
 };
 
 export const RepositoryForksPage = withQueryParams<TRepositoryForksPageQueryParams>(
   {
     defaultParams: {
-      page: 1,
+      page: 0,
       take: 10,
     },
     paramsMapper: {
@@ -27,19 +28,17 @@ export const RepositoryForksPage = withQueryParams<TRepositoryForksPageQueryPara
     },
   }
 )(({ page, take }) => {
-  const dispatch = useDispatch();
-  const { owner, repository } = useParams<TRepositoryForksPageParams>();
+  const { owner, repository } = useRepositoryForksPage(page, take);
+  const classes = useStyles();
 
-  useEffect(() => {
-    dispatch(
-      getRepositoryForksRequest({
-        owner,
-        repository,
-        page,
-        take,
-      })
-    );
-  }, [dispatch, owner, page, repository, take]);
-
-  return <div>Table</div>;
+  return (
+    <Container maxWidth="lg" className={classes.container}>
+      <Typography variant="h3" align="center">
+        {owner}/{repository}
+      </Typography>
+      <Box width={1} mt={2}>
+        <RepositoryForksTable />
+      </Box>
+    </Container>
+  );
 });

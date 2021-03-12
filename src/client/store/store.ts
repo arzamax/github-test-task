@@ -18,11 +18,11 @@ declare global {
 }
 
 export type TRootState = {
-  forks: TRepositoryForksState;
+  repositoryForks: TRepositoryForksState;
 };
 
 const rootReducer = combineReducers({
-  forks: forksReducer,
+  repositoryForks: forksReducer,
 });
 
 function* rootSaga() {

@@ -1,5 +1,3 @@
-import { useHistory } from 'react-router-dom';
-import { ChangeEvent, useState } from 'react';
 import {
   Box,
   Button,
@@ -8,32 +6,19 @@ import {
   Typography,
 } from '@material-ui/core';
 
+import { useSearchPage } from './hooks';
 import { useStyles } from './SearchPage.styled';
 
-const isSearchStringValid = (str: string) => {
-  const result = str.split('/');
-  return result.length === 2 && result[0].length > 1 && result[1].length > 1;
-};
-
 export const SearchPage = () => {
-  const history = useHistory();
-  const [search, setSearch] = useState('');
-  const [isSearchError, setSearchError] = useState(false);
+  const {
+    search,
+    isSearchError,
+    onChangeSearch,
+    onBlurSearch,
+    onKeyPressSearch,
+    onClickSearchButton,
+  } = useSearchPage();
   const classes = useStyles();
-
-  const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-  };
-
-  const handleBlurSearch = () => {
-    setSearchError(!isSearchStringValid(search));
-  };
-
-  const handleClickSearch = () => {
-    if (!isSearchError) {
-      history.push(`/repos/${search}/forks`);
-    }
-  };
 
   return (
     <Container maxWidth="sm" className={classes.container}>
@@ -42,17 +27,23 @@ export const SearchPage = () => {
       </Typography>
       <Box display="flex" alignItems="flex-start" width={1} mt={2}>
         <TextField
+          value={search}
           helperText={
             isSearchError
               ? 'Invalid search string'
               : 'Example: "facebook/react"'
           }
           error={isSearchError}
-          onChange={handleChangeSearch}
-          onBlur={handleBlurSearch}
+          onChange={onChangeSearch}
+          onBlur={onBlurSearch}
+          onKeyPress={onKeyPressSearch}
           className={classes.search}
         />
-        <Button variant="contained" color="primary" onClick={handleClickSearch}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={onClickSearchButton}
+        >
           Search
         </Button>
       </Box>

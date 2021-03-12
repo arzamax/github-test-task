@@ -13,14 +13,14 @@ import { parse, stringify } from 'query-string';
 type TQueryParams<
   T extends Record<string, unknown> = Record<string, unknown>
 > = {
-  defaultParams?: T;
+  defaultParams?: Partial<T>;
   paramsMapper?: {
     [K in keyof Partial<T>]: (
       v: string,
       context?: () => { [K in keyof T]: string }
     ) => void;
   };
-  children?: (params: T) => ReactNode | ReactNode;
+  children: (params: T) => ReactNode;
 };
 
 type TQueryParamsContext<
@@ -89,7 +89,7 @@ export const QueryParams = <
 
   return (
     <QueryParamsContext.Provider value={context}>
-      {typeof children === 'function' ? children(params as T) : children}
+      {children(params as T)}
     </QueryParamsContext.Provider>
   );
 };
@@ -98,7 +98,7 @@ export const withQueryParams = <
   T extends Record<string, unknown> = Record<string, unknown>,
   P extends Record<string, unknown> = Record<string, unknown>
 >(
-  options: TQueryParams<T>
+  options: Omit<TQueryParams<T>, 'children'>
 ) => (WrappedComponent: ComponentType<P & T>) => {
   const WrappedWithQueryParams = (props: P) => (
     <QueryParams<T> {...options}>

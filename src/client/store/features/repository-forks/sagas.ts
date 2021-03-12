@@ -20,7 +20,7 @@ const fetchRepository = (
   owner: string,
   repository: string,
   cancelToken: CancelToken
-): Promise<AxiosResponse<{ forks_count: number }>> =>
+): Promise<AxiosResponse<{ forks: number }>> =>
   axios.get(`/api/github/repos/${owner}/${repository}`, {
     cancelToken,
   });
@@ -47,7 +47,7 @@ export function* getForks(action: PayloadAction<TGetForksPayload>) {
     const { owner, repository, page, take } = action.payload;
     const [
       {
-        data: { forks_count },
+        data: { forks },
       },
       { data },
     ] = yield all([
@@ -61,7 +61,7 @@ export function* getForks(action: PayloadAction<TGetForksPayload>) {
         take
       ),
     ]);
-    yield put(getRepositoryForksSuccess({ data, totalCount: forks_count }));
+    yield put(getRepositoryForksSuccess({ data, totalCount: forks }));
   } catch (e) {
     yield put(getRepositoryForksFailure());
   } finally {

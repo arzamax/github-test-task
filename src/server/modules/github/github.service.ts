@@ -1,4 +1,4 @@
-import { HttpService, Injectable } from '@nestjs/common';
+import { HttpService, Injectable, NotFoundException } from '@nestjs/common';
 
 import { PaginationModel } from 'server/decorators/pagination.decorator';
 
@@ -13,11 +13,15 @@ export class GithubService {
   ) {
     const { owner, repository } = getRepositoryDto;
 
-    const { data } = await this.httpService
-      .get(`/repos/${owner}/${repository}`)
-      .toPromise();
+    try {
+      const { data } = await this.httpService
+        .get(`/repos/${owner}/${repository}`)
+        .toPromise();
 
-    return data;
+      return data;
+    } catch (e) {
+      throw new NotFoundException();
+    }
   }
 
   async getRepositoryForks(
@@ -27,15 +31,18 @@ export class GithubService {
     const { owner, repository } = getRepositoryDto;
     const { take, page } = pagination;
 
-    const { data } = await this.httpService
-      .get(`/repos/${owner}/${repository}/forks`, {
-        params: {
-          per_page: take,
-          page,
-        },
-      })
-      .toPromise();
-
-    return data;
+    try {
+      const { data } = await this.httpService
+        .get(`/repos/${owner}/${repository}/forks`, {
+          params: {
+            per_page: take,
+            page,
+          },
+        })
+        .toPromise();
+      return data;
+    } catch (e) {
+      throw new NotFoundException();
+    }
   }
 }

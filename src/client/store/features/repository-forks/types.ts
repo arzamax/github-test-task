@@ -5,14 +5,13 @@ export type TGetForksPayload = {
   page?: number;
 };
 
-type TRepositoryOwner = {
+export type TRepositoryOwner = {
   login: string;
   avatar_url: string;
 };
 
 export type TRepositoryFork = {
   id: number;
-  name: string;
   full_name: string;
   owner: TRepositoryOwner;
   html_url: string;

@@ -1,1 +1,1 @@
-export { RepositoryForksPage } from './RepositoryForksPage';
+export * from './RepositoryForksPage';

@@ -9,7 +9,7 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
     min-width: 320px;
-    font-family: Roboto, Arial, sans-serif;
+    font-family: Arial, sans-serif;
   }
 
   a {

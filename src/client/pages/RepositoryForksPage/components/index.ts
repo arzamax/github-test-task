@@ -1,0 +1,1 @@
+export { RepositoryForksTable } from './RepositoryForksTable';
